@@ -1,5 +1,4 @@
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
-import Loader from 'components/Loader/Loader';
 import React, { Component } from 'react';
 
 class ImageGallery extends Component {

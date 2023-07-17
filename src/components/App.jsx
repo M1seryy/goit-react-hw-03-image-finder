@@ -1,7 +1,6 @@
 import Loader from './Loader/Loader';
 import Searchbar from './Searchbar/Searchbar';
 import React, { Component } from 'react';
-import axios from 'axios';
 import ImageGallery from './ImageGallery/ImageGallery';
 import { getImagesBySearch } from 'api/images';
 

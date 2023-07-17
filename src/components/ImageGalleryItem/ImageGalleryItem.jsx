@@ -16,7 +16,7 @@ class ImageGalleryItem extends Component {
     const { id, webformatURL, largeImageURL } = this.props.itemData;
     return (
       <>
-        <li onClick={this.onModal} className="ImageGalleryItem">
+        <li key={id} onClick={this.onModal} className="ImageGalleryItem">
           <img className="ImageGalleryItem-image" src={webformatURL} alt="" />
         </li>
         {this.state.modal ? (
