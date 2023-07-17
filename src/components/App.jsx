@@ -3,22 +3,20 @@ import Searchbar from './Searchbar/Searchbar';
 import React, { Component } from 'react';
 import axios from 'axios';
 import ImageGallery from './ImageGallery/ImageGallery';
+import { getImagesBySearch } from 'api/images';
 
 class App extends Component {
   state = {
     response: [],
     inputText: '',
+    isLoading: false,
+    nextPage: 2,
   };
 
   onFormSubmit = async e => {
     e.preventDefault();
-    const API_KEY = `36745882-9a469cd98fdea02c7a63719ef`;
-    const API_REQUEST = `https://pixabay.com/api/?q=${this.state.inputText}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`;
-    const res = await axios.get(API_REQUEST);
-    this.setState({
-      response: res.data,
-    });
-    console.log(res);
+    const page = 1;
+    this.getImages(this.state.inputText, page);
   };
   onInputHandler = e => {
     this.setState({
@@ -26,15 +24,28 @@ class App extends Component {
     });
     console.log(this.state.inputText);
   };
+
+  getImages = async (search, page) => {
+    this.setState({ isLoading: true });
+    const data = await getImagesBySearch(search, page);
+    this.setState({
+      response: data.hits,
+      isLoading: false,
+    });
+  };
   onLoadMoreHandler = async () => {
-    const page = 2;
-    const API_KEY = `36745882-9a469cd98fdea02c7a63719ef`;
-    const NEW_REQUEST = `https://pixabay.com/api/?q=${this.state.inputText}&page=2&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`;
-    const res = await axios.get(NEW_REQUEST);
-    console.log(res);
-    this.setState(({ prev }) => ({
-      response: [...prev.response, res.data],
+    this.setState(prevState => ({
+      nextPage: prevState.nextPage + 1,
     }));
+    const data = await getImagesBySearch(
+      this.state.inputText,
+      this.state.nextPage
+    );
+    console.log(this.state.response.hits);
+    this.setState(prevState => ({
+      response: [...prevState.response, ...data.hits],
+    }));
+    console.log('work');
   };
 
   render() {
@@ -45,11 +56,15 @@ class App extends Component {
           inputValue={this.state.inputText}
           onFormSub={this.onFormSubmit}
         />
-        <ImageGallery
-          data={this.state.response}
-          q={this.state.inputText}
-          onLoad={this.onLoadMoreHandler}
-        />
+        {this.state.isLoading ? (
+          <Loader />
+        ) : (
+          <ImageGallery
+            data={this.state.response}
+            q={this.state.inputText}
+            onLoad={this.onLoadMoreHandler}
+          />
+        )}
       </div>
     );
   }

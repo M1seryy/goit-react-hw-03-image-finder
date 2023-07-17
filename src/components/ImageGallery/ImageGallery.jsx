@@ -4,22 +4,19 @@ import React, { Component } from 'react';
 
 class ImageGallery extends Component {
   render() {
-    console.log(this.props.data.hits);
     return (
       <>
-        <ul class="ImageGallery">
-          {this.props.q !== '' ? (
-            this.props.data.hits ? (
-              this.props.data.hits.map(item => {
-                return <ImageGalleryItem itemData={item} />;
+        <ul className="ImageGallery">
+          {this.props.data
+            ? this.props.data.map(item => {
+                return <ImageGalleryItem key={item.id} itemData={item} />;
               })
-            ) : (
-              <Loader />
-            )
-          ) : null}
+            : null}
         </ul>
-        {this.props.data.hits ? (
-          <button onClick={this.props.onLoad} className="Button">Load more</button>
+        {this.props.data.length >= 12 ? (
+          <button onClick={this.props.onLoad} className="Button">
+            Load more
+          </button>
         ) : null}
       </>
     );
