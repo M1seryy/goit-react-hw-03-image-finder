@@ -12,6 +12,12 @@ class App extends Component {
     nextPage: 2,
   };
 
+  componentDidMount() {
+    this.setState({
+      isLoading: false,
+    });
+  }
+
   onFormSubmit = async e => {
     e.preventDefault();
     const page = 1;
